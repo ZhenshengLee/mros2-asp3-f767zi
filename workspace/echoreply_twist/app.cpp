@@ -8,23 +8,25 @@
 mros2::Subscriber sub;
 mros2::Publisher pub;
 
-std::array<uint32_t, 230> timeArr;
+std::array<uint32_t, 630> timeArr;
 uint32_t count = 0;
 
 void userCallback(geometry_msgs::msg::Twist *msg)
 {
-  if (count == 200){
-    for (int i=0;i<200;i++){
+  timeArr[count] = fch_hrt();
+  if (count == 600){
+    for (int i=0;i<600;i++){
       MROS2_INFO("%lu", timeArr[i]);
       dly_tsk(1000);
     }
     MROS2_INFO("----------------");
-  } else if (count > 200){
+  } else if (count > 600){
 
   } else {
-    timeArr[count] = fch_hrt();
+    timeArr[count+1] = fch_hrt();
     pub.publish(*msg);
-    count++;
+    timeArr[count+2] = fch_hrt();
+    count += 3;
   }
 }
 
